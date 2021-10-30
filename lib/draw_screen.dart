@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, curly_braces_in_flow_control_structures, use_key_in_widget_constructors, constant_identifier_names
+
 import 'dart:io';
 import 'dart:ui';
 
@@ -136,7 +138,6 @@ class _DrawState extends State<Draw> {
         onPanEnd: (details) {
           setState(() {
             points!.add(DrawingPoints(points: null));
-            // DrawingPainter().offsetPoints.add(Offset.infinite);
           });
         },
         child: CustomPaint(
@@ -166,7 +167,6 @@ class _DrawState extends State<Draw> {
                 onColorChanged: (color) {
                   pickerColor = color;
                 },
-                // enableLabel: true,
                 pickerAreaHeightPercent: 0.8,
               ),
             ),
