@@ -13,7 +13,7 @@ class _DrawState extends State<Draw> {
   Color selectedColor = Colors.black;
   Color pickerColor = Colors.black;
   double strokeWidth = 3.0;
-  List<DrawingPoints> points = [];
+  List<DrawingPoints>? points = [];
   bool showBottomList = false;
   double opacity = 1.0;
   StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
@@ -75,7 +75,7 @@ class _DrawState extends State<Draw> {
                           onPressed: () {
                             setState(() {
                               showBottomList = false;
-                              points.clear();
+                              points!.clear();
                             });
                           }),
                     ],
@@ -112,7 +112,7 @@ class _DrawState extends State<Draw> {
         onPanUpdate: (details) {
           setState(() {
             RenderBox renderBox = context.findRenderObject() as RenderBox;
-            points.add(DrawingPoints(
+            points!.add(DrawingPoints(
                 points: renderBox.globalToLocal(details.globalPosition),
                 paint: Paint()
                   ..strokeCap = strokeCap
@@ -124,7 +124,7 @@ class _DrawState extends State<Draw> {
         onPanStart: (details) {
           setState(() {
             RenderBox renderBox = context.findRenderObject() as RenderBox;
-            points.add(DrawingPoints(
+            points!.add(DrawingPoints(
                 points: renderBox.globalToLocal(details.globalPosition),
                 paint: Paint()
                   ..strokeCap = strokeCap
@@ -135,13 +135,14 @@ class _DrawState extends State<Draw> {
         },
         onPanEnd: (details) {
           setState(() {
-            // points.add(DrawingPoints(paint: null, points: Offset.infinite));
+            points!.add(DrawingPoints(points: null));
+            // DrawingPainter().offsetPoints.add(Offset.infinite);
           });
         },
         child: CustomPaint(
           size: Size.infinite,
           painter: DrawingPainter(
-            pointsList: points,
+            pointsList: points!,
           ),
         ),
       ),
@@ -225,10 +226,11 @@ class DrawingPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     for (int i = 0; i < pointsList!.length - 1; i++) {
-      if (pointsList![i] != null && pointsList![i + 1] != null) {
+      if (pointsList![i].points != null && pointsList![i + 1].points != null) {
         canvas.drawLine(pointsList![i].points!, pointsList![i + 1].points!,
             pointsList![i].paint!);
-      } else if (pointsList![i] != null && pointsList![i + 1] == null) {
+      } else if (pointsList![i].points != null &&
+          pointsList![i + 1].points == null) {
         offsetPoints.clear();
         offsetPoints.add(pointsList![i].points!);
         offsetPoints.add(Offset(
